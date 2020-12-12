@@ -31,25 +31,32 @@ public class GameParser {
             if (currentPlayers.size() < lastRoundplayers.size() && !lastRoundplayers.isEmpty()) {
                 for (String player : lastRoundplayers) {
                     if (!currentPlayers.contains(player)) {
-                        PlayerData dataForPlayer = null;
-                        if (playerData.containsKey(player)) {
-                            dataForPlayer = playerData.get(player);
-                        } else {
-                            dataForPlayer = new PlayerData(player);
-                        }
-                        dataForPlayer.addGame();
-                        dataForPlayer.addPosition(lastRoundplayers.size());
-                        playerData.put(player, dataForPlayer);
+                        this.handlePlayer(player, lastRoundplayers.size(), playerData);
                     }
                 }
             }
             lastRoundplayers = currentPlayers;
         }
+        if (!lastRoundplayers.isEmpty()) {
+            this.handlePlayer(lastRoundplayers.get(0), 1, playerData);
+        }
 
         return playerData;
     }
 
-    public List<String> getPlayersByBoard(Integer[][] currentBoard, boolean[][] blackBoard) {
+    private void handlePlayer(String player, int position, HashMap<String, PlayerData> playerData) {
+        PlayerData dataForPlayer = null;
+        if (playerData.containsKey(player)) {
+            dataForPlayer = playerData.get(player);
+        } else {
+            dataForPlayer = new PlayerData(player);
+        }
+        dataForPlayer.addGame();
+        dataForPlayer.addPosition(position);
+        playerData.put(player, dataForPlayer);
+    }
+
+    private List<String> getPlayersByBoard(Integer[][] currentBoard, boolean[][] blackBoard) {
         List<Integer> players = new ArrayList<Integer>();
         for (int i = 0; i < blackBoard.length; i++) {
             for (int j = 0; j < blackBoard[i].length; j++) {
