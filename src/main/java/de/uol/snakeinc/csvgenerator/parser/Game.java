@@ -1,4 +1,4 @@
-package de.uol.snakeinc.vizualizer.parser;
+package de.uol.snakeinc.csvgenerator.parser;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
