@@ -31,20 +31,20 @@ public class GameParser {
             if (currentPlayers.size() < lastRoundplayers.size() && !lastRoundplayers.isEmpty()) {
                 for (String player : lastRoundplayers) {
                     if (!currentPlayers.contains(player)) {
-                        this.handlePlayer(player, lastRoundplayers.size(), playerData);
+                        this.handlePlayer(player, lastRoundplayers.size(), game.getPlayers().size(), playerData);
                     }
                 }
             }
             lastRoundplayers = currentPlayers;
         }
         if (!lastRoundplayers.isEmpty()) {
-            this.handlePlayer(lastRoundplayers.get(0), 1, playerData);
+            this.handlePlayer(lastRoundplayers.get(0), 1, game.getPlayers().size(), playerData);
         }
 
         return playerData;
     }
 
-    private void handlePlayer(String player, int position, HashMap<String, PlayerData> playerData) {
+    private void handlePlayer(String player, int position, int players, HashMap<String, PlayerData> playerData) {
         PlayerData dataForPlayer = null;
         if (playerData.containsKey(player)) {
             dataForPlayer = playerData.get(player);
@@ -53,6 +53,7 @@ public class GameParser {
         }
         dataForPlayer.addGame();
         dataForPlayer.addPosition(position);
+        dataForPlayer.addTrustValue(position, players);
         playerData.put(player, dataForPlayer);
     }
 

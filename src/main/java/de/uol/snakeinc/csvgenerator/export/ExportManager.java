@@ -23,7 +23,17 @@ public class ExportManager {
         HashMap<String, PlayerData> players = new HashMap<String, PlayerData>();
         List<File> files = new ArrayList<File>();
         listFiles(logFolder, files);
+        double counter = 100.0D / files.size();
+        double currentPercent = 0;
+        double oldPercent = 0;
+        System.out.println("0%");
         for (File file : files) {
+            currentPercent += counter;
+            int percent = percentCounter(oldPercent, currentPercent);
+            if (percent != 0) {
+                System.out.println(percent + "%");
+                oldPercent = percent;
+            }
             try {
                 GameParser parser = new GameParser(file);
                 players = parser.addPlayerData(players);
@@ -38,6 +48,7 @@ public class ExportManager {
 
         CsvGenerator generator = new CsvGenerator(exportFile, data);
         generator.generate();
+        System.out.println("100%");
     }
 
     private void listFiles(File directory, List<File> files) {
@@ -53,5 +64,15 @@ public class ExportManager {
                 }
             }
         }
+    }
+
+    private int percentCounter(double oldPercent, double currentPercent) {
+        int[] percents = new int[]{5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95};
+        for (int option : percents) {
+            if (option > oldPercent && currentPercent > option) {
+                return option;
+            }
+        }
+        return 0;
     }
 }

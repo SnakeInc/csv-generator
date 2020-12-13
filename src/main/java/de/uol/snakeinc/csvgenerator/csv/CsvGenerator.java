@@ -19,9 +19,9 @@ public class CsvGenerator {
     }
 
     public void generate() {
-        String data = "Name,Games,First,Second,Third,Fourth,Fifth,Sixth\n";
+        String data = "Name;Games;First;Second;Third;Fourth;Fifth;Sixth;TrustedValue";
         for (PlayerData player : this.playerData) {
-            data = data + player.getCSVString();
+            data = data + "\n" + player.getCSVString();
         }
         try {
             if (file.exists()) {
