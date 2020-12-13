@@ -19,7 +19,7 @@ public class CsvGenerator {
     }
 
     public void generate() {
-        String data = "Name;Games;First;Second;Third;Fourth;Fifth;Sixth;TrustedValue";
+        String data = "Name;Games;First;Second;Third;Fourth;Fifth;Sixth;TrustedValue;MedianPlayers";
         for (PlayerData player : this.playerData) {
             data = data + "\n" + player.getCSVString();
         }

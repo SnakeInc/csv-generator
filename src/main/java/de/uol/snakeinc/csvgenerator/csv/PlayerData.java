@@ -14,6 +14,8 @@ public class PlayerData {
 
     private double trustedValue = 0.0D;
 
+    private int players = 0;
+
     public PlayerData(String playerName) {
         this.playerName = playerName;
     }
@@ -43,9 +45,14 @@ public class PlayerData {
         this.trustedValue += 1.0D - ((position * 1.0D) / (players * 1.0D));
     }
 
+    public void addPlayers(int players) {
+        this.players += players;
+    }
+
     public String getCSVString() {
         double scoring = this.trustedValue / (this.games * 1.0D);
+        double medianPlayers = (this.players * (1.0D)) / (this.games * 1.0D);
 
-        return this.playerName + ";" + this.games + ";" + this.first + ";" + this.second + ";" + this.third + ";" + this.fourth + ";" + this.fifth + ";" + this.sixth + ";" + scoring;
+        return this.playerName + ";" + this.games + ";" + this.first + ";" + this.second + ";" + this.third + ";" + this.fourth + ";" + this.fifth + ";" + this.sixth + ";" + scoring + ";" + medianPlayers;
     }
 }

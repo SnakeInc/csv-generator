@@ -54,6 +54,7 @@ public class GameParser {
         dataForPlayer.addGame();
         dataForPlayer.addPosition(position);
         dataForPlayer.addTrustValue(position, players);
+        dataForPlayer.addPlayers(players);
         playerData.put(player, dataForPlayer);
     }
 
