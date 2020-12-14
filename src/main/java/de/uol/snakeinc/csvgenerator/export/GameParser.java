@@ -65,7 +65,7 @@ public class GameParser {
                 boolean check = blackBoard[i][j];
                 if (check) {
                     Integer player = currentBoard[i][j];
-                    if(player != 0) {
+                    if (player != 0 && player != -1) {
                         blackBoard[i][j] = false;
                         if (!players.contains(player)) {
                             players.add(player);
@@ -76,7 +76,8 @@ public class GameParser {
         }
         List<String> playerNames = new ArrayList<String>();
         for (Integer player : players) {
-            playerNames.add(game.getPlayers().get(player));
+            String playerName = game.getPlayers().get(player);
+            playerNames.add(playerName);
         }
         return playerNames;
     }
