@@ -16,6 +16,8 @@ public class PlayerData {
 
     private int players = 0;
 
+    private double trustScoreEnemies = 0.0D;
+
     public PlayerData(String playerName) {
         this.playerName = playerName;
     }
@@ -45,14 +47,35 @@ public class PlayerData {
         this.trustedValue += 1.0D - ((position * 1.0D) / (players * 1.0D));
     }
 
+    public void addTrustScoreEnemies(double score) {
+        this.trustScoreEnemies += score;
+    }
+
+    public double getTrustValue() {
+        return this.trustedValue / (this.games * 1.0D);
+    }
+
+    public double getTrustScoreEnemies() {
+        return this.trustScoreEnemies / (this.games * 1.0D);
+    }
+
+    public double getWinLoseRate() {
+        return this.first / (this.games * 1.0D);
+    }
+
+    public String getName() {
+        return this.playerName;
+    }
+
     public void addPlayers(int players) {
         this.players += players;
     }
 
     public String getCSVString() {
-        double scoring = this.trustedValue / (this.games * 1.0D);
+        double scoring = this.getTrustValue();
         double medianPlayers = (this.players * (1.0D)) / (this.games * 1.0D);
+        double trustScoreEnemies = this.getTrustScoreEnemies();
 
-        return this.playerName + ";" + this.games + ";" + this.first + ";" + this.second + ";" + this.third + ";" + this.fourth + ";" + this.fifth + ";" + this.sixth + ";" + scoring + ";" + medianPlayers;
+        return this.playerName + ";" + this.games + ";" + this.first + ";" + this.second + ";" + this.third + ";" + this.fourth + ";" + this.fifth + ";" + this.sixth + ";" + scoring + ";" + medianPlayers + ";" + trustScoreEnemies;
     }
 }

@@ -1,5 +1,7 @@
 package de.uol.snakeinc.csvgenerator.export;
 
+import de.uol.snakeinc.csvgenerator.csv.DataHandler;
+import de.uol.snakeinc.csvgenerator.csv.GameData;
 import de.uol.snakeinc.csvgenerator.csv.PlayerData;
 import de.uol.snakeinc.csvgenerator.parser.Game;
 
@@ -17,7 +19,8 @@ public class GameParser {
         this.game = Game.getGame(file);
     }
 
-    public HashMap<String, PlayerData> addPlayerData(HashMap<String, PlayerData> playerData) {
+    public void addPlayerData(DataHandler dataHandler) {
+        GameData gameData = new GameData();
         List<String> lastRoundplayers = new ArrayList<String>();
         boolean[][] blackBoard = new boolean[game.getBoards().get(1).length][game.getBoards().get(1)[0].length];
         for (int i = 0; i < blackBoard.length; i++) {
@@ -31,23 +34,23 @@ public class GameParser {
             if (currentPlayers.size() < lastRoundplayers.size() && !lastRoundplayers.isEmpty()) {
                 for (String player : lastRoundplayers) {
                     if (!currentPlayers.contains(player)) {
-                        this.handlePlayer(player, lastRoundplayers.size(), game.getPlayers().size(), playerData);
+                        this.handlePlayer(player, currentPlayers.size() + 1, game.getPlayers().size(), dataHandler, gameData);
                     }
                 }
             }
             lastRoundplayers = currentPlayers;
         }
         if (!lastRoundplayers.isEmpty()) {
-            this.handlePlayer(lastRoundplayers.get(0), 1, game.getPlayers().size(), playerData);
+            this.handlePlayer(lastRoundplayers.get(0), 1, game.getPlayers().size(), dataHandler, gameData);
         }
 
-        return playerData;
+        dataHandler.getGames().add(gameData);
     }
 
-    private void handlePlayer(String player, int position, int players, HashMap<String, PlayerData> playerData) {
+    private void handlePlayer(String player, int position, int players, DataHandler dataHandler, GameData gameData) {
         PlayerData dataForPlayer = null;
-        if (playerData.containsKey(player)) {
-            dataForPlayer = playerData.get(player);
+        if (dataHandler.getPlayers().containsKey(player)) {
+            dataForPlayer = dataHandler.getPlayers().get(player);
         } else {
             dataForPlayer = new PlayerData(player);
         }
@@ -55,7 +58,8 @@ public class GameParser {
         dataForPlayer.addPosition(position);
         dataForPlayer.addTrustValue(position, players);
         dataForPlayer.addPlayers(players);
-        playerData.put(player, dataForPlayer);
+        dataHandler.getPlayers().put(player, dataForPlayer);
+        gameData.addPlayer(position, dataForPlayer);
     }
 
     private List<String> getPlayersByBoard(Integer[][] currentBoard, boolean[][] blackBoard) {
@@ -65,9 +69,9 @@ public class GameParser {
                 boolean check = blackBoard[i][j];
                 if (check) {
                     Integer player = currentBoard[i][j];
-                    if (player != 0 && player != -1) {
+                    if (player != 0) {
                         blackBoard[i][j] = false;
-                        if (!players.contains(player)) {
+                        if (!players.contains(player) && player != -1) {
                             players.add(player);
                         }
                     }

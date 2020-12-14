@@ -1,6 +1,7 @@
 package de.uol.snakeinc.csvgenerator.export;
 
 import de.uol.snakeinc.csvgenerator.csv.CsvGenerator;
+import de.uol.snakeinc.csvgenerator.csv.DataHandler;
 import de.uol.snakeinc.csvgenerator.csv.PlayerData;
 
 import java.io.File;
@@ -20,13 +21,13 @@ public class ExportManager {
     }
 
     public void collect() {
-        HashMap<String, PlayerData> players = new HashMap<String, PlayerData>();
         List<File> files = new ArrayList<File>();
         listFiles(logFolder, files);
         double counter = 100.0D / files.size();
         double currentPercent = 0;
         double oldPercent = 0;
         System.out.println("0%");
+        DataHandler dataHandler = new DataHandler();
         for (File file : files) {
             currentPercent += counter;
             int percent = percentCounter(oldPercent, currentPercent);
@@ -36,14 +37,15 @@ public class ExportManager {
             }
             try {
                 GameParser parser = new GameParser(file);
-                players = parser.addPlayerData(players);
+                parser.addPlayerData(dataHandler);
             } catch (FileNotFoundException e) {
                 System.out.println("Found a file, that was not readable");
             }
         }
+        dataHandler.scoreGames();
         List<PlayerData> data = new ArrayList<PlayerData>();
-        for (String key : players.keySet()) {
-            data.add(players.get(key));
+        for (String key : dataHandler.getPlayers().keySet()) {
+            data.add(dataHandler.getPlayers().get(key));
         }
 
         CsvGenerator generator = new CsvGenerator(exportFile, data);
